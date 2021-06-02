@@ -456,7 +456,6 @@
 /obj/item/storage/belt/shotgun/martini
 	name = "martini henry ammo belt"
 	desc = "A belt good enough for holding all your .577/400 ball rounds."
-	icon = 'icons/obj/items/ammo.dmi'
 	icon_state = ".557_belt"
 	storage_slots = 12
 	max_storage_space = 24
@@ -496,11 +495,19 @@
 	if(!draw_mode || !ishuman(user) && !contents.len)
 		open(user)
 
+	if(!length(contents))
+		return
+
 	var/obj/item/I = contents[contents.len]
 	if(!istype(I, /obj/item/ammo_magazine/handful))
 		return
 
 	var/obj/item/ammo_magazine/handful/existing_handful = I
+
+	if(existing_handful.current_rounds == 1)
+		user.put_in_hands(existing_handful)
+		return
+
 	existing_handful.create_handful(user, 1)
 	update_icon()
 
